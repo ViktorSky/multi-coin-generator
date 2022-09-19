@@ -24,7 +24,7 @@ import box
 
 Parameters = {
     "community-link":
-        "http://aminoapps.com/invite/88KX3AEDHT",
+        "http://aminoapps.com/invite/5G0A09Y6RE",
 
     "proxy": None
 }
@@ -433,6 +433,10 @@ class Generator(object):
  
         await asyncio.sleep(1)
 
+        if not os.path.exists(emailsPath):
+            print(emailsPath, "file does not exist. Run get_accounts.py to create it.")
+            exit(1)
+
         async with async_open(emailsPath, "r") as File:
             accounts = loads(await File.read())
 
@@ -472,16 +476,21 @@ class Generator(object):
                         )
                     )); print()
 
+                    self.joined = True
+
                 # lottery task
-                await asyncio.gather(*(
-                    self.lottery_task(
-                        amino = amino,
-                        email = x["email"],
-                        sleep = sleep
-                    ) for sleep, (amino, x) in enumerate(
-                        zip(apps, accounts)
-                    )
-                )); print()
+                if (timestamp() - self.logged) >= 60 * 60 * 23:
+                    await asyncio.gather(*(
+                        self.lottery_task(
+                            amino = amino,
+                            email = x["email"],
+                            sleep = sleep
+                        ) for sleep, (amino, x) in enumerate(
+                            zip(apps, accounts)
+                        )
+                    )); print()
+
+                    self.logged = int(timestamp())
 
                 # watch ad task
                 await asyncio.gather(*(
