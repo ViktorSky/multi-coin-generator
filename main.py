@@ -345,7 +345,7 @@ class Generator(object):
         sleep: int
     ) -> None:
 
-        await asyncio.sleep(1 * sleep)
+        await asyncio.sleep(1.12 * sleep)
         resp = await amino.login(
             email = email,
             password = password
